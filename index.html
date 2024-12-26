@@ -1,0 +1,689 @@
+<html><head><base href=".">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonial Upload Platform</title>
+    <style>
+        :root {
+            --primary: #304ffe;
+            --secondary: #536dfe;
+            --light: #121212;
+            --gradient: linear-gradient(135deg, #304ffe, #536dfe);
+            --text: #ffffff;
+            --surface: #1e1e1e;
+            --surface-light: #2d2d2d;
+            --surface-lighter: #363636;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        header {
+            background: var(--gradient);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin: 0.4rem 0;
+            font-weight: 300;
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .main-tab {
+            padding: 1.2rem 2.5rem;
+            border-radius: 12px;
+            border: none;
+            background: var(--surface);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-weight: 600;
+            font-size: 1.15rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text);
+        }
+
+        .main-tab.active {
+            background: var(--gradient);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(26, 35, 126, 0.2);
+            color: white;
+        }
+
+        .main-tab:hover:not(.active) {
+            background: var(--surface-light);
+            transform: translateY(-2px);
+        }
+
+        .main-tab svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .main-tab:not(.active) svg {
+            fill: var(--text);
+        }
+
+        .main-tab.active svg {
+            fill: white;
+        }
+
+        .upload-section {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            color: var(--text);
+        }
+
+        .upload-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text);
+            position: relative;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .testimonial-card h3 {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 0.8rem;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 59, 48, 0.2);
+            transform: scale(1.05);
+        }
+
+        .delete-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        input, textarea {
+            padding: 1rem;
+            border: 2px solid var(--surface-lighter);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        select {
+            padding: 1rem;
+            border: 2px solid var(--surface-lighter);
+            border-radius: 10px; 
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: var(--surface-light);
+            color: var(--text);
+            width: 100%;
+            cursor: pointer;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(83, 109, 254, 0.1);
+            outline: none;
+        }
+
+        button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(83, 109, 254, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(83, 109, 254, 0.3);
+        }
+
+        .media-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+        }
+
+        .testimonial-content {
+            margin-top: 1rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            border: none;
+            background: var(--surface);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            color: var(--text);
+            font-weight: 600;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .tab.active {
+            background: var(--gradient);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(83, 109, 254, 0.15);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--surface-light);
+            transform: translateY(-2px);
+        }
+
+        .tab svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .tab:not(.active) svg {
+            fill: var(--secondary);
+        }
+
+        .tab.active svg {
+            fill: white;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        #submitSection, #viewSection {
+            transition: all 0.3s ease;
+        }
+
+        #viewSection {
+            display: none;
+        }
+
+        #mediaInput {
+            border: 2px dashed var(--surface-lighter);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            background: var(--surface);
+            transition: all 0.3s ease;
+        }
+
+        #mediaInput:hover {
+            border-color: var(--secondary);
+            background: var(--surface-light);
+        }
+
+        select option {
+            background: var(--surface-light);
+            color: var(--text);
+            padding: 1rem;
+        }
+
+        #viewControls {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        #viewControls .input-group {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Add to CSS section */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .action-btn:hover {
+            background: var(--surface-lighter);
+            transform: translateY(-2px);
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .whatsapp-btn:hover {
+            background: #22c35e;
+        }
+
+        .download-btn {
+            background: var(--surface-light);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MANNATECH</h1>
+        <p>Share Your Story</p>
+        <p>Upload your testimonial in any format</p>
+    </header>
+
+    <div class="container">
+        <div class="main-tabs">
+            <button type="button" class="main-tab active" data-section="submit">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+                Submit Testimonial
+            </button>
+            <button type="button" class="main-tab" data-section="view">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg>
+                View Testimonials
+            </button>
+        </div>
+
+        <div id="viewControls" style="display: none; margin-bottom: 2rem;">
+            <div class="input-group">
+                <label for="productFilter">Filter by Product</label>
+                <select id="productFilter">
+                    <option value>All Products</option>
+                    <option value="Advanced Ambrotose&#xae;">Advanced Ambrotose&#xae;</option>
+                    <option value="Ambrotose AO&#xae;">Ambrotose AO&#xae;</option>
+                    <option value="Ambrotose&#xae; Complex">Ambrotose&#xae; Complex</option>
+                    <option value="BounceBack&#xae;">BounceBack&#xae;</option>
+                    <option value="CardioBALANCE&#xae;">CardioBALANCE&#xae;</option> 
+                    <option value="Catalyst&#x2122;">Catalyst&#x2122;</option>
+                    <option value="EM&#x2022;PACT&#xae;">EM&#x2022;PACT&#xae;</option>
+                    <option value="GI-ProBalance&#xae;">GI-ProBalance&#xae;</option>
+                    <option value="GI-Zyme&#xae;">GI-Zyme&#xae;</option>
+                    <option value="GlycoCaf&#xe9;">GlycoCaf&#xe9;</option>
+                    <option value="ImmunoSTART&#xae;">ImmunoSTART&#xae;</option>
+                    <option value="MannaBears&#xae;">MannaBears&#xae;</option>
+                    <option value="MannaCLEANSE&#x2122;">MannaCLEANSE&#x2122;</option>
+                    <option value="Manna-C&#x2122;">Manna-C&#x2122;</option>
+                    <option value="Manapol&#xae;">Manapol&#xae;</option>
+                    <option value="NutriVerus&#x2122;">NutriVerus&#x2122;</option>
+                    <option value="Omega-3 with Vitamin D3">Omega-3 with Vitamin D3</option>
+                    <option value="OsoLean&#xae;">OsoLean&#xae;</option>
+                    <option value="PhytoMatrix&#xae;">PhytoMatrix&#xae;</option>
+                    <option value="PLUS&#x2122;">PLUS&#x2122;</option>
+                    <option value="TruPLENISH&#x2122;">TruPLENISH&#x2122;</option>
+                </select>
+            </div>
+        </div>
+
+        <section class="upload-section">
+            <h2>Add Your Testimonial</h2>
+            <form id="testimonialForm" class="upload-form">
+                <div class="input-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="product">Product Name</label>
+                    <select id="product" required>
+                        <option value>Select a product...</option>
+                        <option value="Advanced Ambrotose&#xae;">Advanced Ambrotose&#xae;</option>
+                        <option value="Ambrotose AO&#xae;">Ambrotose AO&#xae;</option>
+                        <option value="Ambrotose&#xae; Complex">Ambrotose&#xae; Complex</option>
+                        <option value="BounceBack&#xae;">BounceBack&#xae;</option>
+                        <option value="CardioBALANCE&#xae;">CardioBALANCE&#xae;</option> 
+                        <option value="Catalyst&#x2122;">Catalyst&#x2122;</option>
+                        <option value="EM&#x2022;PACT&#xae;">EM&#x2022;PACT&#xae;</option>
+                        <option value="GI-ProBalance&#xae;">GI-ProBalance&#xae;</option>
+                        <option value="GI-Zyme&#xae;">GI-Zyme&#xae;</option>
+                        <option value="GlycoCaf&#xe9;">GlycoCaf&#xe9;</option>
+                        <option value="ImmunoSTART&#xae;">ImmunoSTART&#xae;</option>
+                        <option value="MannaBears&#xae;">MannaBears&#xae;</option>
+                        <option value="MannaCLEANSE&#x2122;">MannaCLEANSE&#x2122;</option>
+                        <option value="Manna-C&#x2122;">Manna-C&#x2122;</option>
+                        <option value="Manapol&#xae;">Manapol&#xae;</option>
+                        <option value="NutriVerus&#x2122;">NutriVerus&#x2122;</option>
+                        <option value="Omega-3 with Vitamin D3">Omega-3 with Vitamin D3</option>
+                        <option value="OsoLean&#xae;">OsoLean&#xae;</option>
+                        <option value="PhytoMatrix&#xae;">PhytoMatrix&#xae;</option>
+                        <option value="PLUS&#x2122;">PLUS&#x2122;</option>
+                        <option value="TruPLENISH&#x2122;">TruPLENISH&#x2122;</option>
+                    </select>
+                </div>
+
+                <div class="tabs" id="testimonialTabs">
+                    <button type="button" class="tab active" data-type="text">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z"/></svg>
+                        Written
+                    </button>
+                    <button type="button" class="tab" data-type="audio">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/></svg>
+                        Audio
+                    </button>
+                    <button type="button" class="tab" data-type="video">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"/></svg>
+                        Video
+                    </button>
+                </div>
+
+                <div id="textInput" class="input-group">
+                    <label for="writtenTestimonial">Your Testimonial</label>
+                    <textarea id="writtenTestimonial" rows="5"></textarea>
+                </div>
+
+                <div id="mediaInput" class="input-group" style="display: none;">
+                    <label for="mediaFile">Upload File</label>
+                    <input type="file" id="mediaFile" accept="video/*,audio/*">
+                </div>
+
+                <div id="mediaPreview" class="media-preview"></div>
+
+                <button type="submit">Submit Testimonial</button>
+            </form>
+        </section>
+
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Uploading your testimonial...</p>
+        </div>
+
+        <section class="testimonials-grid" id="testimonialsContainer">
+            <!-- Testimonials will be dynamically added here -->
+        </section>
+    </div>
+
+    <script>document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('testimonialForm');
+  const tabs = document.querySelectorAll('.tab');
+  const textInput = document.getElementById('textInput');
+  const mediaInput = document.getElementById('mediaInput');
+  const mediaPreview = document.getElementById('mediaPreview');
+  const testimonialsContainer = document.getElementById('testimonialsContainer');
+  const mainTabs = document.querySelectorAll('.main-tab');
+  const submitSection = document.querySelector('.upload-section');
+  const viewSection = document.getElementById('testimonialsContainer');
+  const viewControls = document.getElementById('viewControls');
+  const productFilter = document.getElementById('productFilter');
+  let currentType = 'text';
+  mainTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      mainTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if (tab.dataset.section === 'submit') {
+        submitSection.style.display = 'block';
+        viewSection.style.display = 'none';
+        viewControls.style.display = 'none';
+      } else {
+        submitSection.style.display = 'none';
+        viewSection.style.display = 'grid';
+        viewControls.style.display = 'block';
+      }
+    });
+  });
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentType = tab.dataset.type;
+      if (currentType === 'text') {
+        textInput.style.display = 'block';
+        mediaInput.style.display = 'none';
+        mediaPreview.innerHTML = '';
+      } else {
+        textInput.style.display = 'none';
+        mediaInput.style.display = 'block';
+      }
+    });
+  });
+  productFilter.addEventListener('change', () => {
+    const selectedProduct = productFilter.value;
+    const testimonialCards = testimonialsContainer.querySelectorAll('.testimonial-card');
+    testimonialCards.forEach(card => {
+      const productText = card.querySelector('p').textContent;
+      if (!selectedProduct || productText.includes(selectedProduct)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+  document.getElementById('mediaFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const fileType = file.type.split('/')[0];
+    mediaPreview.innerHTML = '';
+    if (fileType === 'video') {
+      const video = document.createElement('video');
+      video.src = URL.createObjectURL(file);
+      video.controls = true;
+      video.style.maxWidth = '100%';
+      mediaPreview.appendChild(video);
+    } else if (fileType === 'audio') {
+      const audio = document.createElement('audio');
+      audio.src = URL.createObjectURL(file);
+      audio.controls = true;
+      mediaPreview.appendChild(audio);
+    }
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const loading = document.querySelector('.loading');
+    loading.style.display = 'block';
+    setTimeout(() => {
+      const testimonialCard = createTestimonialCard({
+        name: document.getElementById('name').value,
+        product: document.getElementById('product').value,
+        type: currentType,
+        content: currentType === 'text' ? document.getElementById('writtenTestimonial').value : document.getElementById('mediaFile').files[0]
+      });
+      testimonialsContainer.prepend(testimonialCard);
+      loading.style.display = 'none';
+      form.reset();
+      mediaPreview.innerHTML = '';
+    }, 1500);
+  });
+  function createTestimonialCard(testimonial) {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                    </svg>
+                `;
+    deleteBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this testimonial?')) {
+        card.remove();
+      }
+    });
+    card.appendChild(deleteBtn);
+    const header = document.createElement('h3');
+    header.textContent = testimonial.name;
+    card.appendChild(header);
+    const product = document.createElement('p');
+    product.textContent = `Product: ${testimonial.product}`;
+    product.style.color = '#999';
+    product.style.marginTop = '0.5rem';
+    card.appendChild(product);
+    const content = document.createElement('div');
+    content.className = 'testimonial-content';
+    if (testimonial.type === 'text') {
+      content.textContent = testimonial.content;
+    } else {
+      const media = testimonial.type === 'video' ? document.createElement('video') : document.createElement('audio');
+      media.src = URL.createObjectURL(testimonial.content);
+      media.controls = true;
+      media.style.maxWidth = '100%';
+      content.appendChild(media);
+    }
+    card.appendChild(content);
+    const actionBtns = document.createElement('div');
+    actionBtns.className = 'action-btns';
+    const downloadBtn = document.createElement('button');
+    downloadBtn.className = 'action-btn download-btn';
+    downloadBtn.innerHTML = `
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+        Download
+    `;
+    downloadBtn.addEventListener('click', () => {
+      if (testimonial.type === 'text') {
+        const blob = new Blob([testimonial.content], {
+          type: 'text/plain'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${testimonial.name}_testimonial.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(testimonial.content);
+        a.download = testimonial.content.name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    });
+    const whatsappBtn = document.createElement('button');
+    whatsappBtn.className = 'action-btn whatsapp-btn';
+    whatsappBtn.innerHTML = `
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M8.53 7.33C8.37 7.33 8.1 7.39 7.87 7.64C7.65 7.89 7 8.5 7 9.71C7 10.93 7.89 12.1 8 12.27C8.14 12.44 9.76 14.94 12.25 16C12.84 16.27 13.3 16.42 13.66 16.53C14.25 16.72 14.79 16.69 15.22 16.63C15.7 16.56 16.68 16.03 16.89 15.45C17.1 14.87 17.1 14.38 17.04 14.27C16.97 14.17 16.81 14.11 16.56 14C16.31 13.86 15.09 13.26 14.87 13.18C14.64 13.1 14.5 13.06 14.31 13.3C14.15 13.55 13.67 14.11 13.53 14.27C13.38 14.44 13.24 14.46 13 14.34C12.74 14.21 11.94 13.95 11 13.11C10.26 12.45 9.77 11.64 9.62 11.39C9.5 11.15 9.61 11 9.73 10.89C9.84 10.78 10 10.6 10.1 10.45C10.23 10.31 10.27 10.2 10.35 10.04C10.43 9.87 10.39 9.73 10.33 9.61C10.27 9.5 9.77 8.26 9.56 7.77C9.36 7.29 9.16 7.35 9 7.34C8.86 7.34 8.7 7.33 8.53 7.33Z"/></svg>
+        Share on WhatsApp
+    `;
+    whatsappBtn.addEventListener('click', () => {
+      let shareText;
+      if (testimonial.type === 'text') {
+        shareText = `Testimonial from ${testimonial.name} about ${testimonial.product}: ${testimonial.content}`;
+      } else {
+        shareText = `Check out this ${testimonial.type} testimonial from ${testimonial.name} about ${testimonial.product}!`;
+      }
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      window.open(whatsappUrl, '_blank');
+    });
+    actionBtns.appendChild(downloadBtn);
+    actionBtns.appendChild(whatsappBtn);
+    card.appendChild(actionBtns);
+    return card;
+  }
+});</script>
+</body>
+</html>
